@@ -115,6 +115,21 @@ func FindPlanetName(save *savefile.SaveFile, px, py int) string {
 	return ""
 }
 
+// FindPlanetCoord looks up a planet's (x, y) coordinates by name from the given empire's name records.
+func FindPlanetCoord(save *savefile.SaveFile, empIdx int, name string) (int, int, bool) {
+	if empIdx < 0 || empIdx >= len(save.EmpireData) {
+		return 0, 0, false
+	}
+	emp := &save.EmpireData[empIdx]
+	for j := range emp.Names {
+		n := &emp.Names[j]
+		if strings.EqualFold(n.Name, name) {
+			return int(n.CoordX), int(n.CoordY), true
+		}
+	}
+	return 0, 0, false
+}
+
 // FindEmpireIndexByName returns the empire index (0-based) matching the given name, or -1 if not found.
 func FindEmpireIndexByName(save *savefile.SaveFile, name string) int {
 	for i, emp := range save.EmpireData {
